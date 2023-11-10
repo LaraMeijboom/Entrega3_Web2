@@ -21,7 +21,7 @@ class ChapterController{
     }
 
     function showAllChapters(){
-        $queryText = "SELECT * FROM chapters";
+        $queryText = "SELECT * FROM chapter";
         $sort = null;
         $order =null;
         $offset =null;
@@ -60,19 +60,20 @@ class ChapterController{
 
     function addChapter(){
         $body = $this->getData();
-        if(empty($body->name)||empty($body->description)||empty($body->season_id_fk)){
+        if(empty($body->name)||empty($body->chapterNumber)||empty($body->description)||empty($body->season_id)){
             $this->view->response("You must complete all the fields.",400);
             return;
         }
         $name = $body->name;
+        $chapterNumber = $body->chapterNumber;
         $description = $body->description;
-        $season_id = $body->season_id_fk;
+        $season_id = $body->season_id;
         $season = $this->seasonModel->getSeasonById($season_id);
         if(!$season){
             $this->view->response("The season you want to apply has not been found.", 404);
             return;
         }
-        $id = $this->chapterModel->addChapter($name, $description, $season_id);
+        $id = $this->chapterModel->addChapter($name, $chapterNumber, $description, $season_id);
         $chapter = $this->chapterModel->getChapterById($id);
         $this->view->response($chapter, 201);
         }
@@ -80,19 +81,20 @@ class ChapterController{
     function editChapter($params){
         $id = $params[":ID"];
         $body = $this->getData();
-        if(empty($body->name)||empty($body->description)||empty($body->season_id_fk)){
+        if(empty($body->name)||empty($body->chapterNumber)||empty($body->description)||empty($body->season_id)){
             $this->view->response("You must complete all the fields.",400);
             return;
         }
         $name = $body->name;
+        $chapterNumber = $body->chapterNumber;
         $description = $body->description;
-        $season_id = $body->season_id_fk;
+        $season_id = $body->season_id;
         $season = $this->seasonModel->getSeasonById($season_id);
         if(!$season){
             $this->view->response("The season you want to apply has not been found.", 404);
             return;
         }
-        $this->chapterModel->editChapter($name, $description, $season_id, $id);
+        $this->chapterModel->editChapter($name, $chapterNumber, $description, $season_id, $id);
         $chapter = $this->chapterModel->getChapterById($id);
         $this->view->response($chapter, 200);
     }

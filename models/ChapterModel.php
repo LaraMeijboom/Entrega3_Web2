@@ -3,7 +3,7 @@
 class ChapterModel{
     private $db;
     public function __construct(){
-        $this->db = new PDO('mysql:host=localhost;dbname=bd_app;charset=utf8', 'root');
+        $this->db = new PDO('mysql:host=localhost;dbname=tpe2;charset=utf8', 'root');
     }
 
     
@@ -13,19 +13,19 @@ class ChapterModel{
         return $query->fetchAll(PDO::FETCH_OBJ);
     }
     function getChapterById($id){
-        $query = $this->db->prepare('SELECT * FROM chapters WHERE chapter_id = ?');
+        $query = $this->db->prepare('SELECT * FROM chapter WHERE chapter_id = ?');
         $query->execute([$id]);
         return $query->fetch(PDO::FETCH_OBJ);
     }
 
-    function addChapter($name, $description, $season_id){
-        $query = $this->db->prepare('INSERT INTO chapters(name, description, season_id_fk) VALUES (?,?,?)');
-        $query->execute([$name, $description, $season_id]);
+    function addChapter($name, $chapterNumber, $description, $season_id){
+        $query = $this->db->prepare('INSERT INTO chapter(name, chapterNumber, description, season_id) VALUES (?,?,?,?)');
+        $query->execute([$name, $chapterNumber, $description, $season_id]);
         return $this->db->lastInsertId();
     }
 
-    function editChapter($name, $description, $season_id, $id){
-        $query = $this->db->prepare('UPDATE chapters SET name = ?, description = ?, season_id_fk = ? WHERE chapter_id = ?');
-        $query->execute([$name, $description, $season_id, $id]);
+    function editChapter($name, $chapterNumber, $description, $season_id, $id){
+        $query = $this->db->prepare('UPDATE chapter SET name = ?, chapterNumber = ?, description = ?, season_id = ? WHERE chapter_id = ?');
+        $query->execute([$name, $chapterNumber, $description, $season_id, $id]);
     }
 }
