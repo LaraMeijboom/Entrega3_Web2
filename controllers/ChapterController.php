@@ -35,8 +35,14 @@ class ChapterController{
                 $queryText .= " WHERE $sort LIKE '%$filter%'";
             }
         }
-        //ordenado:juana
-        
+        //ordenado:
+        if(isset($_GET['sort']) && isset($_GET['order'])){
+            $sort = $_GET['sort'];
+            $order = $_GET['order'];
+            if($sort != null && $order != null) {
+                $queryText .= " ORDER BY $sort $order"; 
+            }
+        }        
         //paginado:
         if(isset($_GET['offset']) && isset($_GET['limit'])){
             $offset = $_GET['offset'];
@@ -89,5 +95,14 @@ class ChapterController{
         $this->chapterModel->editChapter($name, $description, $season_id, $id);
         $chapter = $this->chapterModel->getChapterById($id);
         $this->view->response($chapter, 200);
+    }
+    function showChapterById($params){
+        $id = $params[":ID"];
+        $chapter = $this->chapterModel->getChapterById($id);
+        if($chapter){
+            $this->view->response($chapter,200);
+        } else{
+            $this->view->response("Chapter has been not found", 404);
+        }
     }
 }

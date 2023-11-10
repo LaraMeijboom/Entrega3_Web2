@@ -6,8 +6,12 @@ class ChapterModel{
         $this->db = new PDO('mysql:host=localhost;dbname=bd_app;charset=utf8', 'root');
     }
 
-    //juana
     
+    function getAllChapters($queryText){
+        $query = $this->db->prepare($queryText);
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_OBJ);
+    }
     function getChapterById($id){
         $query = $this->db->prepare('SELECT * FROM chapters WHERE chapter_id = ?');
         $query->execute([$id]);
