@@ -6,7 +6,7 @@ define("BASE_URL", 'http://'.$_SERVER["SERVER_NAME"].':'.$_SERVER["SERVER_PORT"]
 
 
     $router = new Router();
-    $router->addRoute('chapters', 'GET','ChapterController','showAllChapters');
+    $router->addRoute('chapter', 'GET','ChapterController','showAllChapters');
     $router->addRoute('chapter', 'POST', 'ChapterController', 'addChapter');
     $router->addRoute('chapter/:ID','PUT','ChapterController','editChapter');
     $router->addRoute('chapter/:ID', 'GET', 'ChapterController', 'showChapterById');
