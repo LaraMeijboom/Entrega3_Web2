@@ -20,40 +20,17 @@ class ChapterController{
         return json_decode($this->data);
     }
 
-    function showAllChapters(){
-        $queryText = "SELECT * FROM chapter";
-        $sort = null;
-        $order =null;
-        $offset =null;
-        $limit = null;
-        $filter = null;
-        //filtrado:
-        if(isset($_GET['filter']) && isset($_GET['sort'])) {
-            $filter = $_GET['filter'];
-            $sort = $_GET['sort'];
-            if($filter != null && $sort != null) {
-                $queryText .= " WHERE $sort LIKE '%$filter%'";
-            }
-        }
-        //ordenado:
-        if(isset($_GET['sort']) && isset($_GET['order'])){
-            $sort = $_GET['sort'];
-            $order = $_GET['order'];
-            if($sort != null && $order != null) {
-                $queryText .= " ORDER BY $sort $order"; 
-            }
-        }        
-        //paginado:
-        if(isset($_GET['offset']) && isset($_GET['limit'])){
-            $offset = $_GET['offset'];
-            $limit = $_GET['limit'];
-            if($offset != null && $limit != null) {
-                $queryText .= " LIMIT $offset, $limit";
-            }
-        }
-        $chapters = $this->chapterModel->getAllChapters($queryText);
+    function showAllChapters($params = []){
+        $sort = isset($_GET['sort']) ? ($_GET['sort']) :null;
+        $order = isset($_GET['order']) ? ($_GET['order']) :"ASC";
+        $offset = isset($_GET['offset']) ? ($_GET['offset']) : null;
+        $limit = isset($_GET['limit']) ? ($_GET['limit']) : null;
+        $filter = isset($_GET['filter']) ? ($_GET['filter']) :null;
+        $field = isset($_GET['field']) ? ($_GET['field']) :null;
+        $chapters = $this->chapterModel->getAllChapters($filter, $order, $limit, $offset, $sort, $field);
             if(!$chapters){
-                $this->view->response("Chapters not found.", 404);
+                $this->view->response($chapters, 404);
+                return;
             }
         $this->view->response($chapters, 200);
     }

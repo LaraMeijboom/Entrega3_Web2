@@ -7,11 +7,34 @@ class ChapterModel{
     }
 
     
-    function getAllChapters($queryText){
-        $query = $this->db->prepare($queryText);
-        $query->execute();
-        return $query->fetchAll(PDO::FETCH_OBJ);
+  function getAllChapters($filter = null, $order = "ASC", $limit = null, $offset = null, $sort = null, $field = null) {
+    $queryText = "SELECT * FROM chapter";
+    $offsetNuevo = null;
+    // Filtrado
+    $params = array();
+    if ($filter != null && $field != null) {
+        $queryText .= " WHERE $field LIKE '%$filter%'";
     }
+    if ($sort != null) {
+        $queryText .= " ORDER BY $sort $order";
+    }
+    // Paginado
+    if ($offset != null && $limit != null) {
+        $offsetNuevo =  ((int)$offset - 1) *(int) $limit;
+        $queryText .= " LIMIT $offsetNuevo, $limit";   
+      
+    }
+    // Ordenado
+  
+    $query = $this->db->prepare($queryText);
+   
+
+        $query->execute();
+
+    return $query->fetchAll(PDO::FETCH_OBJ);
+}
+
+
     function getChapterById($id){
         $query = $this->db->prepare('SELECT * FROM chapter WHERE chapter_id = ?');
         $query->execute([$id]);
